@@ -1,0 +1,35 @@
+{
+  "name": "hyped-bot",
+  "version": "1.0.0",
+  "description": "Absence bot for <Hyped>",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "eslint": "^7.9.0",
+    "eslint-plugin-filenames": "^1.3.2",
+    "husky": "^4.3.0",
+    "moment": "^2.28.0",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "eslint . --ext .js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NightwingEU/hyped-bot.git"
+  },
+  "author": "Danial Qureshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NightwingEU/hyped-bot/issues"
+  },
+  "homepage": "https://github.com/NightwingEU/hyped-bot#readme"
+}
