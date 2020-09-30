@@ -1,3 +1,3 @@
 # hyped-bot
 
-Small bot to handle absences for <Hyped> Tarren Mill
+Small bot to handle absences for Hyped Tarren Mill

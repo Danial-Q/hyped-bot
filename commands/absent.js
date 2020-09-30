@@ -14,35 +14,43 @@ module.exports = {
 		let absenceAdded = false;
 		let longTerm, shortTerm;
 
-		adminAbsence.messages.fetch(msgIDs.longTerm).then(msg => {
-			longTerm = msg;
-		});
-		adminAbsence.messages.fetch(msgIDs.shortTerm).then(msg => {
-			shortTerm = msg;
+		adminAbsence.messages.fetch(msgIDs.longTerm).then(longMsg => {
+			longTerm = longMsg;
 
-			const shortAbsencePostArray = shortTerm.content.split('**Raider:**').slice(1);
-			const longAbsencePostArray = longTerm.content.split('**Raider:**').slice(1);
-			const absencePostArray = shortAbsencePostArray.concat(longAbsencePostArray);
+			adminAbsence.messages.fetch(msgIDs.shortTerm).then(shortMsg => {
+				shortTerm = shortMsg;
 
-			if (raidDays.includes(currentDay)) {
-				for (let i = 0; i < absencePostArray.length; i++) {
-					const absencePost = absencePostArray[i].toString();
-					const raiderAbsent = absencePost.slice(0, 22);
-					const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
-					const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
-					const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
-					const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
-					let isAbsent;
+				const shortAbsencePostArray = shortTerm.content.split('**Raider:**').slice(1);
+				const longAbsencePostArray = longTerm.content.split('**Raider:**').slice(1);
+				const absencePostArray = shortAbsencePostArray.concat(longAbsencePostArray);
 
-					if (currentDate.isSame(moment(startDate, 'DD/MM'), 'day')) {
-						isAbsent = true;
-					} else {
-						isAbsent = moment(currentDate).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
-					}
+				if (raidDays.includes(currentDay)) {
+					for (const absencePost of absencePostArray) {
+						const raiderAbsent = absencePost.slice(0, 22);
+						const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
+						const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
+						const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
+						const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
+						let isAbsent;
 
-					if (isAbsent) {
-						absentList += `-${raiderAbsent}\n`;
-						absenceAdded = true;
+						if (currentDate.isSame(moment(startDate, 'DD/MM'), 'day')) {
+							isAbsent = true;
+						} else {
+							isAbsent = moment(currentDate).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
+						}
+
+						if (isAbsent) {
+							absentList += `-${raiderAbsent}\n`;
+							absenceAdded = true;
+						}
+
+						if (moment(endDate, 'DD/MM').isBefore(currentDate) && !moment(endDate, 'DD/MM').isSame(currentDate, 'd')) {
+							if (shortAbsencePostArray.includes(absencePost)) {
+								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							}
+						}
 					}
 
 					if (absenceAdded) {
@@ -50,69 +58,83 @@ module.exports = {
 					} else {
 						message.channel.send('There are no absences for next raid!');
 					}
-				}
 
-			} else if (currentDay < 3) {
-				const nextRaid = moment().add(3 - currentDay, 'days');
+				} else if (currentDay < 3) {
+					const nextRaid = moment().add(3 - currentDay, 'days');
 
-				for (let i = 0; i < absencePostArray.length; i++) {
-					const absencePost = absencePostArray[i].toString();
-					const raiderAbsent = absencePost.slice(0, 22);
-					const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
-					const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
-					const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
-					const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
-					let isAbsent;
+					for (const absencePost of absencePostArray) {
+						const raiderAbsent = absencePost.slice(0, 22);
+						const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
+						const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
+						const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
+						const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
+						let isAbsent;
 
-					if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
-						isAbsent = true;
+						if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
+							isAbsent = true;
+						} else {
+							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
+						}
+
+						if (isAbsent) {
+							absentList += `-${raiderAbsent}\n`;
+							absenceAdded = true;
+						}
+
+						if (moment(endDate, 'DD/MM').isBefore(nextRaid) && !moment(endDate, 'DD/MM').isSame(nextRaid, 'd')) {
+							if (shortAbsencePostArray.includes(absencePost)) {
+								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							}
+						}
+					}
+
+					if (absenceAdded) {
+						message.channel.send(absentList);
 					} else {
-						isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
+						message.channel.send('There are no absences for next raid!');
 					}
 
-					if (isAbsent) {
-						absentList += `-${raiderAbsent}\n`;
-						absenceAdded = true;
+				} else if (currentDay > 3) {
+					const nextRaid = moment().add(7 - currentDay, 'days');
+
+					for (const absencePost of absencePostArray) {
+						const raiderAbsent = absencePost.slice(0, 22);
+						const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
+						const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
+						const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
+						const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
+						let isAbsent;
+
+						if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
+							isAbsent = true;
+						} else {
+							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD-MM'), moment(endDate, 'DD/MM'), 'day');
+						}
+
+						if (isAbsent) {
+							absentList += `-${raiderAbsent}\n`;
+							absenceAdded = true;
+						}
+
+						if (moment(endDate, 'DD/MM').isBefore(nextRaid) && !moment(endDate, 'DD/MM').isSame(nextRaid, 'd')) {
+							if (shortAbsencePostArray.includes(absencePost)) {
+								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							}
+						}
 					}
-				}
 
-				if (absenceAdded) {
-					message.channel.send(absentList);
-				} else {
-					message.channel.send('There are no absences for next raid!');
-				}
-
-			} else if (currentDay > 3) {
-				const nextRaid = moment().add(7 - currentDay, 'days');
-
-				for (let i = 0; i < absencePostArray.length; i++) {
-					const absencePost = absencePostArray[i].toString();
-					const raiderAbsent = absencePost.slice(0, 22);
-					const indexOfStartDate = absencePost.indexOf('**Start Date:**') + 16;
-					const startDate = absencePost.slice(indexOfStartDate, indexOfStartDate + 5);
-					const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
-					const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
-					let isAbsent;
-
-					if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
-						isAbsent = true;
+					if (absenceAdded) {
+						message.channel.send(absentList);
 					} else {
-						isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD-MM'), moment(endDate, 'DD/MM'), 'day');
+						message.channel.send('There are no absences for next raid!');
 					}
 
-					if (isAbsent) {
-						absentList += `-${raiderAbsent}\n`;
-						absenceAdded = true;
-					}
 				}
-
-				if (absenceAdded) {
-					message.channel.send(absentList);
-				} else {
-					message.channel.send('There are no absences for next raid!');
-				}
-
-			}
+			});
 		});
 
 	}
