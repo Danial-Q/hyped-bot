@@ -54,7 +54,6 @@ module.exports = {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
-
 						}
 					}
 
@@ -89,6 +88,10 @@ module.exports = {
 						if (moment(endDate, 'DD/MM').isBefore(nextRaid) && !moment(endDate, 'DD/MM').isSame(nextRaid, 'd')) {
 							if (shortAbsencePostArray.includes(absencePost)) {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
@@ -126,6 +129,10 @@ module.exports = {
 						if (moment(endDate, 'DD/MM').isBefore(nextRaid) && !moment(endDate, 'DD/MM').isSame(nextRaid, 'd')) {
 							if (shortAbsencePostArray.includes(absencePost)) {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
