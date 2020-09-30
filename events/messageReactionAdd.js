@@ -1,4 +1,5 @@
 const moment = require('moment');
+const momentDate = require('../utils/momentDate.js');
 
 module.exports = (client, reaction) => {
 	const {channelIDs, guildID, msgIDs} = client.config;
@@ -10,8 +11,8 @@ module.exports = (client, reaction) => {
 			const messageSplit = reaction.message.content.split('\n');
 			const raiderAbsent = reaction.message.author;
 			const reason = messageSplit[0].substring(7);
-			const startDate = moment(messageSplit[1].substring(11).replace(/\s/g, ''), 'DD-MM');
-			const endDate = moment(messageSplit[2].substring(9).replace(/\s/g, ''), 'DD-MM');
+			const startDate = momentDate((messageSplit[1].substring(11).replace(/\s/g, '')));
+			const endDate = momentDate((messageSplit[2].substring(9).replace(/\s/g, '')));
 			const daysDiff = moment.duration(endDate.diff(startDate));
 			const daysDuration = Math.round(moment.duration(daysDiff).asDays()) + 1;
 
