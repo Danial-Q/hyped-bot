@@ -6,6 +6,8 @@ module.exports = (client, message) => {
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+	if (!command) return;
+
 	if (command.adminOnly && !message.member.roles.cache.has(roleIDs.officers)) return;
 
 	try {

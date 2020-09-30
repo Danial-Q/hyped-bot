@@ -37,6 +37,7 @@ module.exports = {
 							isAbsent = true;
 						} else {
 							isAbsent = currentDate.isBetween(startDate, endDate, 'd');
+
 						}
 
 						if (isAbsent) {
@@ -47,6 +48,10 @@ module.exports = {
 						if (endDate.isBefore(currentDate) && !endDate.isSame(currentDate, 'd')) {
 							if (shortAbsencePostArray.includes(absencePost)) {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
@@ -73,6 +78,7 @@ module.exports = {
 							isAbsent = true;
 						} else {
 							isAbsent = nextRaid.isBetween(startDate, endDate, 'd');
+
 						}
 
 						if (isAbsent) {
@@ -83,6 +89,10 @@ module.exports = {
 						if (endDate.isBefore(nextRaid) && !endDate.isSame(nextRaid, 'd')) {
 							if (shortAbsencePostArray.includes(absencePost)) {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
@@ -109,6 +119,7 @@ module.exports = {
 							isAbsent = true;
 						} else {
 							isAbsent = nextRaid.isBetween(startDate, endDate, 'd');
+
 						}
 
 						if (isAbsent) {
@@ -119,6 +130,10 @@ module.exports = {
 						if (endDate.isBefore(nextRaid) && !endDate.isSame(nextRaid, 'd')) {
 							if (shortAbsencePostArray.includes(absencePost)) {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
 							}
