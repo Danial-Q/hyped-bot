@@ -33,10 +33,10 @@ module.exports = {
 						const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
 						let isAbsent;
 
-						if (currentDate.isSame(moment(startDate, 'DD/MM'), 'day')) {
+						if (currentDate.isSame(moment(startDate, 'DD/MM'), 'd')) {
 							isAbsent = true;
 						} else {
-							isAbsent = moment(currentDate).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
+							isAbsent = moment(currentDate).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'd');
 						}
 
 						if (isAbsent) {
@@ -49,7 +49,12 @@ module.exports = {
 								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
 									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
 								});
+							} else {
+								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
+									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
+								});
 							}
+
 						}
 					}
 
@@ -70,10 +75,10 @@ module.exports = {
 						const endDate = absencePost.slice(indexOfEndDate, indexOfEndDate + 5);
 						let isAbsent;
 
-						if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
+						if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'd')) {
 							isAbsent = true;
 						} else {
-							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'day');
+							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD/MM'), moment(endDate, 'DD/MM'), 'd');
 						}
 
 						if (isAbsent) {
@@ -110,7 +115,7 @@ module.exports = {
 						if (nextRaid.isSame(moment(startDate, 'DD/MM'), 'day')) {
 							isAbsent = true;
 						} else {
-							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD-MM'), moment(endDate, 'DD/MM'), 'day');
+							isAbsent = moment(nextRaid).isBetween(moment(startDate, 'DD-MM'), moment(endDate, 'DD/MM'), 'd');
 						}
 
 						if (isAbsent) {
