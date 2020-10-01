@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {momentDate} = require('../utils/momentDate.js');
+const {momentDate} = require('../utils/momentDate');
 
 module.exports = (client, reaction, user) => {
 	const {channelIDs, guildID, msgIDs} = client.config;
