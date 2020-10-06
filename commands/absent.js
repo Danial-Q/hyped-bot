@@ -4,16 +4,25 @@ const {momentDate} = require('../utils/momentDate');
 module.exports = {
 	name: 'absent',
 	adminOnly: true,
-	execute(message) {
+	execute(message, args) {
 		const {channelIDs, guildID, msgIDs} = message.client.config;
 		const guildObj = message.client.guilds.cache.get(guildID);
 		const adminAbsence = guildObj.channels.cache.get(channelIDs.adminAbsence);
-		const currentDate = moment();
-		const currentDay = currentDate.isoWeekday();
+		const datePattern = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))$/;
 		const raidDays = [3, 4, 7];
-		let absentList = 'Raiders Absent for next raid:\n';
 		let absenceAdded = false;
-		let longTerm, shortTerm, isAbsent;
+		let longTerm, shortTerm, isAbsent, dateGiven;
+		let currentDate = moment();
+
+		if (args) {
+			if (datePattern.test(args[0])) {
+				dateGiven = true;
+				currentDate = momentDate(args[0]);
+			}
+		}
+
+		const currentDay = currentDate.isoWeekday();
+		let absentList = dateGiven ? `Raiders absent on the ${currentDate.format('DD/MM')}\n` : 'Raiders Absent for next raid:\n';
 
 		adminAbsence.messages.fetch(msgIDs.longTerm).then(longMsg => {
 			longTerm = longMsg;
