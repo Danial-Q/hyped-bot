@@ -1,6 +1,8 @@
-const {readdirSync, readdir} = require('fs');
 const {Client, Collection} = require('discord.js');
 const client = new Client();
+const cron = require('node-cron');
+const {absenceRemoval} = require('./utils/absenceRemoval');
+const {readdirSync, readdir} = require('fs');
 
 client.config = require('./config.json');
 
@@ -29,3 +31,7 @@ for (const file of commandFiles) {
 }
 
 client.login(client.config.token);
+
+cron.schedule('0 8 * * *', () => {
+	absenceRemoval(client);
+});
