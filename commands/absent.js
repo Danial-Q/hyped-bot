@@ -84,18 +84,6 @@ module.exports = {
 							absentList += `-${raiderAbsent}\n`;
 							absenceAdded = true;
 						}
-
-						if (endDate.isBefore(currentDate) && !endDate.isSame(currentDate, 'd')) {
-							if (shortAbsencePostArray.includes(absencePost)) {
-								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							} else {
-								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							}
-						}
 					}
 
 					if (absenceAdded) {
@@ -114,29 +102,17 @@ module.exports = {
 						const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
 						const endDate = momentDate(absencePost.slice(indexOfEndDate, indexOfEndDate + 5));
 
-						if (currentDate.isSame(startDate, 'd')) {
+						if (nextRaid.isSame(startDate, 'd')) {
 							isAbsent = true;
-						} else if (currentDate.isSame(endDate, 'd')) {
+						} else if (nextRaid.isSame(endDate, 'd')) {
 							isAbsent = true;
 						} else {
-							isAbsent = currentDate.isBetween(startDate, endDate, 'd');
+							isAbsent = nextRaid.isBetween(startDate, endDate, 'd');
 						}
 
 						if (isAbsent) {
 							absentList += `-${raiderAbsent}\n`;
 							absenceAdded = true;
-						}
-
-						if (endDate.isBefore(nextRaid) && !endDate.isSame(nextRaid, 'd')) {
-							if (shortAbsencePostArray.includes(absencePost)) {
-								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							} else {
-								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							}
 						}
 					}
 
@@ -156,29 +132,17 @@ module.exports = {
 						const indexOfEndDate = absencePost.indexOf('**End Date:**') + 14;
 						const endDate = momentDate(absencePost.slice(indexOfEndDate, indexOfEndDate + 5));
 
-						if (currentDate.isSame(startDate, 'd')) {
+						if (nextRaid.isSame(startDate, 'd')) {
 							isAbsent = true;
-						} else if (currentDate.isSame(endDate, 'd')) {
+						} else if (nextRaid.isSame(endDate, 'd')) {
 							isAbsent = true;
 						} else {
-							isAbsent = currentDate.isBetween(startDate, endDate, 'd');
+							isAbsent = nextRaid.isBetween(startDate, endDate, 'd');
 						}
 
 						if (isAbsent) {
 							absentList += `-${raiderAbsent}\n`;
 							absenceAdded = true;
-						}
-
-						if (endDate.isBefore(nextRaid) && !endDate.isSame(nextRaid, 'd')) {
-							if (shortAbsencePostArray.includes(absencePost)) {
-								adminAbsence.messages.fetch(msgIDs.shortTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							} else {
-								adminAbsence.messages.fetch(msgIDs.longTerm).then(msgToEdit => {
-									msgToEdit.edit(`${msgToEdit.content.replace(`**Raider:**${absencePost}`, '')}`);
-								});
-							}
 						}
 					}
 
